@@ -11,8 +11,15 @@ config_version=3
 [application]
 
 config/name="Asteroid Belters"
-run/main_scene="res://Main.tscn"
+run/main_scene="res://scenes/MainMenu.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/handheld/orientation="sensor_landscape"
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
+window/stretch/shrink="1"
 
 [rendering]
 
