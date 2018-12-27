@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scripts/Fight.gd" type="Script" id=1]
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/Stage1.tscn" type="PackedScene" id=3]
 
 [node name="Fight" type="Spatial" index="0"]
 
@@ -9,7 +10,7 @@ script = ExtResource( 1 )
 
 [node name="Camera" type="Camera" parent="." index="0"]
 
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.67911 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.26675, 12.5387 )
 keep_aspect = 1
 cull_mask = 1048575
 environment = null
@@ -22,13 +23,19 @@ fov = 70.0
 size = 1.0
 near = 0.05
 far = 100.0
+_sections_unfolded = [ "Transform" ]
 
 [node name="Player1" parent="." index="1" instance=ExtResource( 2 )]
 
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.61929, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 1.60325, 0 )
+_sections_unfolded = [ "Transform" ]
+left = true
 
 [node name="Player2" parent="." index="2" instance=ExtResource( 2 )]
 
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.56313, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 1.60325, 0 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="Stage1" parent="." index="3" instance=ExtResource( 3 )]
 
 

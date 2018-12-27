@@ -16,10 +16,17 @@ config/icon="res://icon.png"
 
 [display]
 
+window/size/test_width=854
+window/size/test_height=500
 window/handheld/orientation="sensor_landscape"
 window/stretch/mode="viewport"
 window/stretch/aspect="expand"
 window/stretch/shrink="1"
+
+[input]
+
+move=[ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
 
 [rendering]
 
