@@ -14,12 +14,10 @@ config/name="Asteroid Belters"
 run/main_scene="res://scenes/MainMenu.tscn"
 config/icon="res://icon.png"
 
-[autoload]
-
-Networking="*res://scripts/Networking.gd"
-
 [display]
 
+window/size/test_width=854
+window/size/test_height=500
 window/handheld/orientation="sensor_landscape"
 window/stretch/mode="viewport"
 window/stretch/aspect="expand"
