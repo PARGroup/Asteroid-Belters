@@ -18,8 +18,6 @@ func _player_connected(id):
 	
 	fight.connect("game_finished", self, "_end_game", [], CONNECT_DEFERRED)
 	
-	fight.set_connected_player_id(id)
-	
 	get_tree().get_root().add_child(fight)
 	hide()
 	

@@ -32,8 +32,6 @@ var inputCountdown = 0
 var moveRightRequested = false
 var moveLeftRequested = false
 
-var id = -1
-
 func _physics_process(delta):
 	
 	if stateTime > 0:
@@ -154,7 +152,7 @@ func set_movement_state(state, movementScale):
 
 func attack(target, knockbackScale):
 	# using target to call rpc makes a huge difference.
-	target.rpc("attacked", self.id, knockbackScale)
+	target.rpc("attacked", get_tree().get_network_unique_id(), knockbackScale)
 
 master func attacked(attackerId, knockbackScale):
 	set_movement_state(self.KNOCKBACK, knockbackScale)
