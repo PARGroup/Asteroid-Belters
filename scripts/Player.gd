@@ -34,6 +34,9 @@ var moveLeftRequested = false
 
 func _physics_process(delta):
 	
+	if stateTime > 0:
+		move_with_accel(delta)
+	
 	if is_network_master():
 		
 		if Input.is_action_just_pressed("move"):
@@ -49,6 +52,19 @@ func _physics_process(delta):
 				moveRightRequested = true
 				moveLeftRequested = false
 			
+			inputCountdown = INPUT_RETENTION_TIME
+			
+		elif Input.is_action_just_pressed("move_right"):
+			moveRightRequested = true
+			moveLeftRequested = false
+			
+			inputCountdown = INPUT_RETENTION_TIME
+			
+		elif Input.is_action_just_pressed("move_left"):
+			moveLeftRequested = true
+			moveRightRequested = false
+			
+			inputCountdown = INPUT_RETENTION_TIME
 		
 		match currentState.stateType:
 			StateType.IDLING:
@@ -69,72 +85,95 @@ func _physics_process(delta):
 					if left:
 						scale *= LEAP_BACK_SCALE
 					
-					set_movement_state(self.DASHING, -1)
+					set_movement_state(self.DASHING, scale)
+
 					moveLeftRequested = false
 			
 			StateType.DASHING:
 				
-				stateTime -= delta
-				velocity += acceleration * delta
-				move_and_slide(velocity, Vector3(0, 1, 0), 0.05, 2)
+<<<<<<< HEAD
+				var collisionCount = get_slide_count()
 				
-				send_updated_movement()
-				
-				if get_slide_count() > 0:
+				if collisionCount > 0:
 					
-					stateTime = 0
+					for i in range(collisionCount):
+						
+						var collision = get_slide_collision(i)
+						var otherPlayer = collision.collider
+						
+						if otherPlayer.is_class("KinematicBody"):
+							
+							stateTime = 0
+							
+							match otherPlayer.currentState.stateType:
+								StateType.IDLING:
+									attack(otherPlayer, movementScale)
+						
 					
-					var collision = get_slide_collision(0)
-					var otherPlayer = collision.collider
 					
-					if otherPlayer.is_class("KinematicBody"):
-						match otherPlayer.currentState.stateType:
-							StateType.IDLING:
-								otherPlayer.hit(self, movementScale)
 			
-	if inputCountdown > 0:
+		if inputCountdown > 0:
+			
+			inputCountdown -= delta
 		
-		inputCountdown -= delta
-	
-	if inputCountdown <= 0:
-		inputCountdown = 0
+		if inputCountdown <= 0:
+			inputCountdown = 0
+			
+			moveRightRequested = false
+			moveLeftRequested = false
 		
-		moveRightRequested = false
-		moveLeftRequested = false
+		if stateTime <= 0:
+			stateTime = 0
+			
+			if currentState != self.IDLING:
+				currentState = self.IDLING
+				send_updated_state()
+
+func move_with_accel(delta):
 	
-	if stateTime <= 0:
-		stateTime = 0
-		currentState = self.IDLING
+	if currentState.stateType == StateType.KNOCKED_BACK:
+		pass
+	
+	stateTime -= delta
+	velocity += acceleration * delta
+	move_and_slide(velocity, Vector3(0, 1, 0), 0.05, 1)
+	
+	send_updated_movement()
 
 func set_movement_state(state, movementScale):
 	
 	currentState = state
 	self.movementScale = movementScale
-	
-	velocity = state.velocity * movementScale
-	acceleration = state.velocity * movementScale
 	stateTime = state.time
 	
+	velocity = state.velocity * movementScale
+	acceleration = state.acceleration * movementScale
+	
+	send_updated_state()
 	send_updated_movement()
 
-func hit(attacker, knockbackScale):
-	
+func attack(target, knockbackScale):
+	# using target to call rpc makes a huge difference.
+	target.rpc("attacked", get_tree().get_network_unique_id(), knockbackScale)
+
+master func attacked(attackerId, knockbackScale):
 	set_movement_state(self.KNOCKBACK, knockbackScale)
 
-slave func set_movement(position, acceleration, velocity, movementScale):
+sync func set_movement(position, acceleration, velocity, movementScale):
 	self.transform.origin = position
 	self.acceleration = acceleration
 	self.velocity = velocity
 	self.movementScale = movementScale
 
-slave func set_state(state):
-	currentState = state
+sync func set_state(state, time):
+	currentState = State.from_dict(state)
+	stateTime = time
 
 func send_updated_state():
-	rpc_unreliable("set_state", currentState)
+	rpc("set_state", currentState.to_dict(), stateTime)
 
 func send_updated_movement():
-	rpc_unreliable("set_movement", self.transform.origin, acceleration, velocity, movementScale)
+	rpc("set_movement", self.transform.origin, acceleration, velocity, movementScale)
 
 class State:
 	
@@ -148,11 +187,22 @@ class State:
 		self.time = time
 		self.acceleration = acceleration
 		self.stateType = stateType
+	
+	func to_dict():
+		return {
+			"velocity": velocity,
+			"time": time,
+			"acceleration": acceleration,
+			"stateType": stateType
+		}
+	
+	static func from_dict(dict):
+		return new(dict.velocity, dict.time, dict.acceleration, dict.stateType)
 
 enum StateType {
 	IDLING,
-	BLOCKING,
+	#BLOCKING,
 	DASHING,
 	KNOCKED_BACK,
-	STUNNED,
+	#STUNNED,
 }

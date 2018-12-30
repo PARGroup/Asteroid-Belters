@@ -9,11 +9,13 @@ func _ready():
 	
 	# Sets proper master/slave relations.
 	if get_tree().is_network_server():
-		$Player2.set_network_master(get_tree().get_network_connected_peers()[0])
+		player2.set_network_master(get_tree().get_network_connected_peers()[0])
+		
 	else:
-		$Player2.set_network_master(get_tree().get_network_unique_id())
+		player2.set_network_master(get_tree().get_network_unique_id())
+		
 	
-	$Player1.left = true
-	$Player2.left = false
+	player1.left = true
+	player2.left = false
 	
 	print("Unique id: ", get_tree().get_network_unique_id())
