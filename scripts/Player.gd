@@ -90,8 +90,7 @@ func _physics_process(delta):
 					moveLeftRequested = false
 			
 			StateType.DASHING:
-				
-<<<<<<< HEAD
+			
 				var collisionCount = get_slide_count()
 				
 				if collisionCount > 0:
