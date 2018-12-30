@@ -28,6 +28,7 @@ _sections_unfolded = [ "Transform" ]
 [node name="Player1" parent="." index="1" instance=ExtResource( 2 )]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 1.60325, 0 )
+_sections_unfolded = [ "Transform" ]
 left = true
 
 [node name="Player2" parent="." index="2" instance=ExtResource( 2 )]

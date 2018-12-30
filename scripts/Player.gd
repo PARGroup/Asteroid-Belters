@@ -86,10 +86,12 @@ func _physics_process(delta):
 						scale *= LEAP_BACK_SCALE
 					
 					set_movement_state(self.DASHING, scale)
+
 					moveLeftRequested = false
 			
 			StateType.DASHING:
 				
+<<<<<<< HEAD
 				var collisionCount = get_slide_count()
 				
 				if collisionCount > 0:
